@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
@@ -18,16 +18,34 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import GetAppSharpIcon from "@material-ui/icons/GetAppSharp";
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+function createData(
+  name,
+  Date,
+  AvgWidth,
+  Exposure,
+  TotalOpen,
+  TotalSky,
+  SatRadius,
+  AvgSeeing
+) {
+  return {
+    name,
+    Date,
+    AvgWidth,
+    Exposure,
+    TotalOpen,
+    TotalSky,
+    SatRadius,
+    AvgSeeing
+  };
 }
 
-const rows = [
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Donut", 452, 25.0, 51, 4.9),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0)
-];
+// const rows = [
+//   createData("Cupcake", 305, 3.7, 67, 4.3),
+//   createData("Donut", 452, 25.0, 51, 4.9),
+//   createData("Eclair", 262, 16.0, 24, 6.0),
+//   createData("Frozen yoghurt", 159, 6.0, 24, 4.0)
+// ];
 
 export function formTable() {
   let { id, name, lastname } = this.props.objectsToSearch; //destructuring
@@ -64,12 +82,40 @@ const headCells = [
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "Dessert (100g serving)"
+    label: "Name"
   },
-  { id: "calories", numeric: true, disablePadding: false, label: "Calories" },
-  { id: "fat", numeric: true, disablePadding: false, label: "Fat (g)" },
-  { id: "carbs", numeric: true, disablePadding: false, label: "Carbs (g)" },
-  { id: "protein", numeric: true, disablePadding: false, label: "Protein (g)" }
+  { id: "Date", numeric: true, disablePadding: false, label: "Date" },
+  { id: "AvgWidth", numeric: true, disablePadding: false, label: "Avg. Width" },
+  {
+    id: "Exposure",
+    numeric: true,
+    disablePadding: false,
+    label: "Exposure Time"
+  },
+  {
+    id: "TotalOpen",
+    numeric: true,
+    disablePadding: false,
+    label: "Total Open Shutter Time"
+  },
+  {
+    id: "TotalSky",
+    numeric: true,
+    disablePadding: false,
+    label: "Total On Sky Rotation"
+  },
+  {
+    id: "SatRadius",
+    numeric: true,
+    disablePadding: false,
+    label: "Saturation Radius"
+  },
+  {
+    id: "TotalOpen",
+    numeric: true,
+    disablePadding: false,
+    label: "Avg. Seeing"
+  }
 ];
 
 function EnhancedTableHead(props) {
@@ -216,14 +262,33 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function EnhancedTable() {
+export default function EnhancedTable(props) {
+  const data = props.items;
+  const rows = [];
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("Date");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  useEffect(() => {
+    //    data.map((name,
+    //     Date,
+    //     AvgWidth,
+    //     Exposure,
+    //     TotalOpen,
+    //     TotalSky,
+    //     SatRadius,
+    //     AvgSeeing) => {
+    //       createData("aaa", 10, 10, 10, 10, 10, 10, 10)
+    // }
+    rows.push(createData("Cupcake", 305, 3.7, 67, 4.3, 10, 10, 10));
+    // createData("Donut", 452, 25.0, 51, 4.9);
+    //   createData("Eclair", 262, 16.0, 24, 6.0),
+    //   createData("Frozen yoghurt", 159, 6.0, 24, 4.0);
+    console.log("asdas");
+  });
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -267,7 +332,7 @@ export default function EnhancedTable() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  //
+
   const isSelected = name => selected.indexOf(name) !== -1;
 
   const emptyRows =
@@ -324,7 +389,7 @@ export default function EnhancedTable() {
                       >
                         {row.name}
                       </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
+                      <TableCell align="right">{row.Date}</TableCell>
                       <TableCell align="right">{row.fat}</TableCell>
                       <TableCell align="right">{row.carbs}</TableCell>
                       <TableCell align="right">{row.protein}</TableCell>

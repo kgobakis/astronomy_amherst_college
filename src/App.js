@@ -45,7 +45,7 @@ const styles = {
     backgroundImage: "url(" + require("./images/bg.jpg") + ")",
     backgroundPosition: "center",
     backgroundSize: "cover",
-    // backgroundRepeat: "no-repeat",
+    backgroundRepeat: "repeat",
     width: "100vw",
     height: "100vh",
     position: "absolute"

@@ -9,7 +9,7 @@ export default class Home extends Component {
     this.state = {
       error: null,
       isLoaded: false,
-      items: ["2", " 2"],
+      items: ["2"],
       objectsToSearch: [
         {
           name: "PLane",
@@ -48,7 +48,11 @@ export default class Home extends Component {
   renderTableData = () => {
     return this.state.items.map((items, index) => {
       // const { id, name, age, email } = objectsToSearch; //destructuring
-      return <Table object={items} />;
+      return (
+        <div style={styles.table}>
+          <Table items={items} />
+        </div>
+      );
     });
   };
   onSubmitSearch = text => {
@@ -104,12 +108,13 @@ const styles = {
   },
   tableContainer: {
     marginTop: 10,
-    // marginLeft: 2,
-    padding: 4,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
     flexWrap: "wrap"
+  },
+  table: {
+    marginRight: 2
   }
 };
