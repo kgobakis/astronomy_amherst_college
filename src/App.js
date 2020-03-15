@@ -1,7 +1,8 @@
 import React from "react";
 import Home from "./pages/Home";
 import About from "./pages/About";
-
+import HomeIcon from "@material-ui/icons/Home";
+import AboutIcon from "@material-ui/icons/Face";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -13,15 +14,26 @@ function App() {
       <CssBaseline />
 
       <div style={styles.backgroundImage}>
-        <AppBar position="static" color="#FFFFFF">
+        <AppBar position="static" color="inherit">
           <Toolbar style={styles.Toolbar}>
-            <Link to="/" style={{ color: "inherit" }}>
-              <Button color="inherit">Home</Button>
-            </Link>
+            <Button
+              startIcon={<HomeIcon />}
+              color="inherit"
+              variant="outlined"
+              href="/"
+              style={{ marginRight: 10 }}
+            >
+              Home
+            </Button>
 
-            <Link to="/about" style={{ color: "inherit" }}>
-              <Button color="inherit">About</Button>
-            </Link>
+            <Button
+              startIcon={<AboutIcon />}
+              color="inherit"
+              variant="outlined"
+              href="/about"
+            >
+              About
+            </Button>
           </Toolbar>
         </AppBar>
 
@@ -42,7 +54,7 @@ function App() {
 }
 const styles = {
   backgroundImage: {
-    backgroundImage: "url(" + require("./images/bg.jpg") + ")",
+    backgroundImage: "url(" + require("./media/bg.jpg") + ")",
     backgroundPosition: "center",
     backgroundSize: "cover",
     backgroundRepeat: "repeat",

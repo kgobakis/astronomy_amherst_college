@@ -16,9 +16,7 @@ import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import DeleteIcon from "@material-ui/icons/Delete";
+
 import FilterListIcon from "@material-ui/icons/FilterList";
 import GetAppSharpIcon from "@material-ui/icons/GetAppSharp";
 
@@ -167,7 +165,7 @@ const useToolbarStyles = makeStyles(theme => ({
     paddingRight: theme.spacing(1)
   },
   highlight:
-    theme.palette.type === "light"
+    theme.palette.type === "dark"
       ? {
           color: theme.palette.secondary.main,
           backgroundColor: lighten(theme.palette.secondary.light, 0.85)
@@ -253,7 +251,7 @@ const useStyles = makeStyles(theme => ({
 export default function EnhancedTable(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("Dates");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -316,6 +314,7 @@ export default function EnhancedTable(props) {
         <TableContainer>
           <Table
             className={classes.table}
+            // handleChange={this.handleChange}
             aria-labelledby="tableTitle"
             size={"medium"}
             aria-label="enhanced table"
@@ -343,7 +342,7 @@ export default function EnhancedTable(props) {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row}
+                      key={index}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">

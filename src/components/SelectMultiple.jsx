@@ -90,6 +90,9 @@ export default function MultipleSelect(props) {
           ))}
         </Select>
         <Button onClick={() => props.onSubmitSearch(planetName)}>submit</Button>
+        <Button color="secondary" onClick={() => setPlanetName([])}>
+          clear
+        </Button>
       </FormControl>
     </div>
   );

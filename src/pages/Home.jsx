@@ -68,19 +68,13 @@ export default class Home extends Component {
             backgroundColor: "#FFFFFF",
             width: window.innerWidth / 5,
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "center",
             alignItems: "center",
             flexDirection: "row",
             borderRadius: "15px"
           }}
         >
-          <Text style={{ marginLeft: 10 }}>Select here:</Text>
-          <div style={{ marginRight: 10 }}>
-            <SelectMultiple
-              onSubmitSearch={this.onSubmitSearch}
-              names={names}
-            />
-          </div>
+          <SelectMultiple onSubmitSearch={this.onSubmitSearch} names={names} />
         </div>
         <div style={styles.tableContainer}>
           {<ObjectsTable data={mockData} names={this.state.items} />}
