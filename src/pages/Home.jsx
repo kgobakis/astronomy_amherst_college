@@ -1,29 +1,29 @@
 import React, { Component } from "react";
 import SelectMultiple from "../components/SelectMultiple";
-import Table from "../components/Table";
+import ObjectsTable from "../components/ObjectsTable";
 import Text from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
+import { data as mockData } from "../mock/data";
+import { names } from "../mock/names";
+var axios = require("axios");
+
 export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
       error: null,
       isLoaded: false,
-      items: ["2"],
-      objectsToSearch: [
-        {
-          name: "PLane",
-          id: "123123",
-          lastname: "antigone"
-        },
-        {
-          name: "funky",
-          id: "029",
-          lastname: "asapolw"
-        }
-      ]
+      items: []
     };
   }
+  componentDidMount() {
+    // var th = this;
+    // this.serverRequest = axios.get(this.props.source).then(function(result) {
+    //   th.setState({
+    //     concerts: result.data.concerts
+    //   });
+    // });
+  }
+
   // componentDidMount() {
   //   fetch("https://10")
   //     .then(res => res.json())
@@ -36,7 +36,7 @@ export default class Home extends Component {
   //       },
   //       // Note: it's important to handle errors here
   //       // instead of a catch() block so that we don't swallow
-  //       // exceptions from actual bugs in components.
+  //       // exceptions from actual bugs in components.s
   //       error => {
   //         this.setState({
   //           isLoaded: true,
@@ -45,22 +45,11 @@ export default class Home extends Component {
   //       }
   //     );
   // }
-  renderTableData = () => {
-    return this.state.items.map((items, index) => {
-      // const { id, name, age, email } = objectsToSearch; //destructuring
-      return (
-        <div style={styles.table}>
-          <Table items={items} />
-        </div>
-      );
-    });
-  };
-  onSubmitSearch = text => {
+
+  onSubmitSearch = planets => {
     this.setState({
-      items: text
+      items: planets
     });
-    console.log(this.state.items);
-    this.renderTableData();
   };
   render() {
     // const { error, isLoaded, items } = this.state;
@@ -71,28 +60,31 @@ export default class Home extends Component {
     // } else {
     return (
       <div style={styles.container}>
-        <h1 style={{ color: "#FFFFFF" }}>
+        <h1 style={{ color: "#FFFFFF", textShadow: "2px 2px #000000" }}>
           What star would you like to learn more about today?
-          {SelectMultiple.planet}
         </h1>
         <div
           style={{
             backgroundColor: "#FFFFFF",
-            width: 600,
+            width: window.innerWidth / 5,
             display: "flex",
-            justifyContent: "flex-start",
+            justifyContent: "space-between",
             alignItems: "center",
-            flexDirection: "row"
+            flexDirection: "row",
+            borderRadius: "15px"
           }}
         >
-          <Text style={{ position: "center", marginRight: 100, marginLeft: 2 }}>
-            Select here:
-          </Text>
-          <div style={{ position: "center" }}>
-            <SelectMultiple onSubmitSearch={this.onSubmitSearch} />
+          <Text style={{ marginLeft: 10 }}>Select here:</Text>
+          <div style={{ marginRight: 10 }}>
+            <SelectMultiple
+              onSubmitSearch={this.onSubmitSearch}
+              names={names}
+            />
           </div>
         </div>
-        <div style={styles.tableContainer}>{this.renderTableData()}</div>
+        <div style={styles.tableContainer}>
+          {<ObjectsTable data={mockData} names={this.state.items} />}
+        </div>
       </div>
     );
   }
@@ -100,7 +92,6 @@ export default class Home extends Component {
 
 const styles = {
   container: {
-    marginTop: 20,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
@@ -16,41 +16,31 @@ import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import GetAppSharpIcon from "@material-ui/icons/GetAppSharp";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
+import DeleteIcon from "@material-ui/icons/Delete";
+import FilterListIcon from "@material-ui/icons/FilterList";
 
-function createData(
-  name,
-  Date,
-  AvgWidth,
-  Exposure,
-  TotalOpen,
-  TotalSky,
-  SatRadius,
-  AvgSeeing
-) {
-  return {
-    name,
-    Date,
-    AvgWidth,
-    Exposure,
-    TotalOpen,
-    TotalSky,
-    SatRadius,
-    AvgSeeing
-  };
+function createData(name, calories, fat, carbs, protein) {
+  return { name, calories, fat, carbs, protein };
 }
 
-// const rows = [
-//   createData("Cupcake", 305, 3.7, 67, 4.3),
-//   createData("Donut", 452, 25.0, 51, 4.9),
-//   createData("Eclair", 262, 16.0, 24, 6.0),
-//   createData("Frozen yoghurt", 159, 6.0, 24, 4.0)
-// ];
+const rows = [
+  createData("Cupcake", 305, 3.7, 67, 4.3),
+  createData("Donut", 452, 25.0, 51, 4.9),
+  createData("Eclair", 262, 16.0, 24, 6.0),
+  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
+  createData("Honeycomb", 408, 3.2, 87, 6.5),
+  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
+  createData("Jelly Bean", 375, 0.0, 94, 0.0),
+  createData("KitKat", 518, 26.0, 65, 7.0),
+  createData("Lollipop", 392, 0.2, 98, 0.0),
+  createData("Marshmallow", 318, 0, 81, 2.0),
+  createData("Nougat", 360, 19.0, 9, 37.0),
+  createData("Oreo", 437, 18.0, 63, 4.0)
+];
 
-export function formTable() {
-  let { id, name, lastname } = this.props.objectsToSearch; //destructuring
-  createData(id, name, lastname);
-}
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -82,40 +72,12 @@ const headCells = [
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "Name"
+    label: "Dessert (100g serving)"
   },
-  { id: "Date", numeric: true, disablePadding: false, label: "Date" },
-  { id: "AvgWidth", numeric: true, disablePadding: false, label: "Avg. Width" },
-  {
-    id: "Exposure",
-    numeric: true,
-    disablePadding: false,
-    label: "Exposure Time"
-  },
-  {
-    id: "TotalOpen",
-    numeric: true,
-    disablePadding: false,
-    label: "Total Open Shutter Time"
-  },
-  {
-    id: "TotalSky",
-    numeric: true,
-    disablePadding: false,
-    label: "Total On Sky Rotation"
-  },
-  {
-    id: "SatRadius",
-    numeric: true,
-    disablePadding: false,
-    label: "Saturation Radius"
-  },
-  {
-    id: "TotalOpen",
-    numeric: true,
-    disablePadding: false,
-    label: "Avg. Seeing"
-  }
+  { id: "calories", numeric: true, disablePadding: false, label: "Calories" },
+  { id: "fat", numeric: true, disablePadding: false, label: "Fat (g)" },
+  { id: "carbs", numeric: true, disablePadding: false, label: "Carbs (g)" },
+  { id: "protein", numeric: true, disablePadding: false, label: "Protein (g)" }
 ];
 
 function EnhancedTableHead(props) {
@@ -219,17 +181,23 @@ const EnhancedTableToolbar = props => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h6" id="tableTitle">
-          Hd_sld1
+          Nutrition
         </Typography>
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Download">
-          <IconButton aria-label="GetAppSharpIcon">
-            <GetAppSharpIcon />
+        <Tooltip title="Delete">
+          <IconButton aria-label="delete">
+            <DeleteIcon />
           </IconButton>
         </Tooltip>
-      ) : null}
+      ) : (
+        <Tooltip title="Filter list">
+          <IconButton aria-label="filter list">
+            <FilterListIcon />
+          </IconButton>
+        </Tooltip>
+      )}
     </Toolbar>
   );
 };
@@ -240,14 +208,14 @@ EnhancedTableToolbar.propTypes = {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: window.innerWidth / 2 - 4
+    width: "100%"
   },
   paper: {
-    width: window.innerWidth / 2 - 4,
+    width: "100%",
     marginBottom: theme.spacing(2)
   },
   table: {
-    maxWidth: window.innerWidth / 2 - 4
+    minWidth: 750
   },
   visuallyHidden: {
     border: 0,
@@ -262,33 +230,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function EnhancedTable(props) {
-  const data = props.items;
-  const rows = [];
+export default function EnhancedTable() {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("Date");
+  const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  useEffect(() => {
-    //    data.map((name,
-    //     Date,
-    //     AvgWidth,
-    //     Exposure,
-    //     TotalOpen,
-    //     TotalSky,
-    //     SatRadius,
-    //     AvgSeeing) => {
-    //       createData("aaa", 10, 10, 10, 10, 10, 10, 10)
-    // }
-    rows.push(createData("Cupcake", 305, 3.7, 67, 4.3, 10, 10, 10));
-    // createData("Donut", 452, 25.0, 51, 4.9);
-    //   createData("Eclair", 262, 16.0, 24, 6.0),
-    //   createData("Frozen yoghurt", 159, 6.0, 24, 4.0);
-    console.log("asdas");
-  });
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -297,7 +247,7 @@ export default function EnhancedTable(props) {
 
   const handleSelectAllClick = event => {
     if (event.target.checked) {
-      const newSelecteds = rows.map(n => n.name);
+      const newSelecteds = rows.map(n => n.Object_Name);
       setSelected(newSelecteds);
       return;
     }
@@ -333,6 +283,10 @@ export default function EnhancedTable(props) {
     setPage(0);
   };
 
+  const handleChangeDense = event => {
+    setDense(event.target.checked);
+  };
+
   const isSelected = name => selected.indexOf(name) !== -1;
 
   const emptyRows =
@@ -346,7 +300,7 @@ export default function EnhancedTable(props) {
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
-            size={"medium"}
+            size={dense ? "small" : "medium"}
             aria-label="enhanced table"
           >
             <EnhancedTableHead
@@ -389,7 +343,7 @@ export default function EnhancedTable(props) {
                       >
                         {row.name}
                       </TableCell>
-                      <TableCell align="right">{row.Date}</TableCell>
+                      <TableCell align="right">{row.calories}</TableCell>
                       <TableCell align="right">{row.fat}</TableCell>
                       <TableCell align="right">{row.carbs}</TableCell>
                       <TableCell align="right">{row.protein}</TableCell>
@@ -397,7 +351,7 @@ export default function EnhancedTable(props) {
                   );
                 })}
               {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
+                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
@@ -414,6 +368,10 @@ export default function EnhancedTable(props) {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
+      <FormControlLabel
+        control={<Switch checked={dense} onChange={handleChangeDense} />}
+        label="Dense padding"
+      />
     </div>
   );
 }

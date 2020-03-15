@@ -13,7 +13,7 @@ import Chip from "@material-ui/core/Chip";
 const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 200,
     maxWidth: 300
   },
   chips: {
@@ -39,8 +39,6 @@ const MenuProps = {
   }
 };
 
-const names = ["Oliver Hansen", "Van Henry", "April Tucker", "April Tuckerz"];
-
 function getStyles(name, planetName, theme) {
   return {
     fontWeight:
@@ -54,7 +52,7 @@ export default function MultipleSelect(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [planetName, setPlanetName] = React.useState([]);
-
+  const names = props.names;
   const handleChange = event => {
     setPlanetName(event.target.value);
   };
@@ -91,15 +89,8 @@ export default function MultipleSelect(props) {
             </MenuItem>
           ))}
         </Select>
+        <Button onClick={() => props.onSubmitSearch(planetName)}>submit</Button>
       </FormControl>
-      <div>
-        <Button
-          style={{ position: "absolute", right: 670, top: 174 }}
-          onClick={() => props.onSubmitSearch(planetName)}
-        >
-          submit
-        </Button>
-      </div>
     </div>
   );
 }
