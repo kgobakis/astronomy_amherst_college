@@ -56,9 +56,7 @@ export default function MultipleSelect(props) {
   const handleChange = event => {
     setPlanetName(event.target.value);
   };
-  const eraseNames = () => {
-    setPlanetName();
-  };
+
   return (
     <div>
       <FormControl className={classes.formControl}>

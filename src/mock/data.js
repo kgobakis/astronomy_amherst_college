@@ -70,7 +70,7 @@ export const data = [
     Avg_Seeing: "$\\nodata$"
   },
   {
-    Object_Name: "HD 100546",
+    Object_Name: "PDS70",
     Date: "06/01/2015",
     Avg_Width: "1160",
     Exposure_Time: "5",
@@ -78,15 +78,26 @@ export const data = [
     Total_Rotation: "49.6",
     Saturation_Radius: "N/A",
     Avg_Seeing: "0.629252443"
+  },
+  {
+    Object_Name: "HD 141569",
+    Date: "04/09/2014",
+    Avg_Width: "2402",
+    Exposure_Time: "2.27",
+    Total_Open: "90.8756666666667",
+    Total_Rotation: "55.7",
+    Saturation_Radius: "4",
+    Avg_Seeing: "0.703907642"
   }
-  // {
-  //   Object_Name: "HD 141569",
-  //   Date: "04/09/2014",
-  //   Avg_Width: "2402",
-  //   Exposure_Time: "2.27",
-  //   Total_Open: "90.8756666666667",
-  //   Total_Rotation: "55.7",
-  //   Saturation_Radius: "4",
-  //   Avg_Seeing: "0.703907642"
-  // }
+];
+export const options = [
+  {
+    id: "Preprocessed"
+  },
+  {
+    id: "Calibration"
+  },
+  {
+    id: "Raw"
+  }
 ];

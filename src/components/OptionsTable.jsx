@@ -17,84 +17,14 @@ import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 
-import FilterListIcon from "@material-ui/icons/FilterList";
 import GetAppSharpIcon from "@material-ui/icons/GetAppSharp";
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
-}
-function sortDates(array) {
-  array
-    .sort((a, b) => {
-      return new Date(a.Date).getTime() - new Date(b.Date).getTime();
-    })
-    .reverse();
-}
 const headCells = [
   {
-    id: "Object_Name",
+    id: "name",
     numeric: false,
     disablePadding: true,
-    label: "Name"
-  },
-  { id: "Date", numeric: true, disablePadding: false, label: "Date" },
-  {
-    id: "Avg_Width",
-    numeric: true,
-    disablePadding: false,
-    label: "Avg. Width"
-  },
-  {
-    id: "Exposure_Time",
-    numeric: true,
-    disablePadding: false,
-    label: "Exposure Time"
-  },
-  {
-    id: "Total_Open",
-    numeric: true,
-    disablePadding: false,
-    label: "Total Open Shutter Time"
-  },
-  {
-    id: "Total_Sky",
-    numeric: true,
-    disablePadding: false,
-    label: "Total On Sky Rotation"
-  },
-  {
-    id: "Saturation_Radius",
-    numeric: true,
-    disablePadding: false,
-    label: "Saturation Radius"
-  },
-  {
-    id: "Avg_Seeing",
-    numeric: true,
-    disablePadding: false,
-    label: "Avg. Seeing"
+    label: "Type"
   }
 ];
 
@@ -130,18 +60,7 @@ function EnhancedTableHead(props) {
             padding={headCell.disablePadding ? "none" : "default"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null}
-            </TableSortLabel>
+            {headCell.label}
           </TableCell>
         ))}
       </TableRow>
@@ -199,7 +118,7 @@ const EnhancedTableToolbar = props => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h6" id="tableTitle">
-          Objects
+          Types to Download
         </Typography>
       )}
       <Tooltip title="Download">
@@ -214,7 +133,7 @@ const EnhancedTableToolbar = props => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired
 };
-const yo = "100%";
+const yo = "25%";
 const useStyles = makeStyles(theme => ({
   root: {
     width: yo
@@ -268,6 +187,7 @@ export default function EnhancedTable(props) {
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
+
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
     } else if (selectedIndex === 0) {
@@ -285,22 +205,10 @@ export default function EnhancedTable(props) {
     downloadButton();
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
   const downloadButton = () => {
-    props.getObjects(selected);
+    props.getTypes(selected);
   };
   const isSelected = name => selected.indexOf(name) !== -1;
-
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -327,67 +235,40 @@ export default function EnhancedTable(props) {
               rowCount={rows.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy)).map(
-                (row, index) => {
-                  const isItemSelected = isSelected(row);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+              {rows.map((row, index) => {
+                const isItemSelected = isSelected(row);
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      onClick={event => handleClick(event, row)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={index}
-                      selected={isItemSelected}
+                return (
+                  <TableRow
+                    hover
+                    onClick={event => handleClick(event, row)}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={index}
+                    selected={isItemSelected}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={isItemSelected}
+                        inputProps={{ "aria-labelledby": labelId }}
+                      />
+                    </TableCell>
+                    <TableCell
+                      component="th"
+                      id={labelId}
+                      scope="row"
+                      padding="none"
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
-                        {row.Object_Name}
-                      </TableCell>
-
-                      <TableCell align="right">{row.Date}</TableCell>
-                      <TableCell align="right">{row.Avg_Width}</TableCell>
-                      <TableCell align="right">{row.Exposure_Time}</TableCell>
-                      <TableCell align="right">{row.Total_Open}</TableCell>
-                      <TableCell align="right">{row.Total_Rotation}</TableCell>
-
-                      <TableCell align="right">
-                        {row.Saturation_Radius}
-                      </TableCell>
-                      <TableCell align="right">{row.Avg_Seeing}</TableCell>
-                    </TableRow>
-                  );
-                }
-              )}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
+                      {row.id}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
       </Paper>
     </div>
   );
