@@ -21,7 +21,7 @@ export const data = [
   },
   {
     Object_Name: "HD 100453",
-    Date: "05/02/2018",
+    Date: "05/06/2018",
     Avg_Width: "563$^{+}$",
     Exposure_Time: "15",
     Total_Open: "140.75",

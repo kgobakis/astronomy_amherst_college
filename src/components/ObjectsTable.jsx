@@ -14,11 +14,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-
-import FilterListIcon from "@material-ui/icons/FilterList";
-import GetAppSharpIcon from "@material-ui/icons/GetAppSharp";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -45,13 +40,7 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map(el => el[0]);
 }
-function sortDates(array) {
-  array
-    .sort((a, b) => {
-      return new Date(a.Date).getTime() - new Date(b.Date).getTime();
-    })
-    .reverse();
-}
+
 const headCells = [
   {
     id: "Object_Name",
@@ -171,8 +160,8 @@ const useToolbarStyles = makeStyles(theme => ({
           backgroundColor: lighten("#B86BCA", 0.85)
         }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark
+          color: "#864E93",
+          backgroundColor: lighten("#B86BCA", 0.85)
         },
   title: {
     flex: "1 1 100%"
@@ -191,7 +180,7 @@ const EnhancedTableToolbar = props => {
     >
       {numSelected > 0 ? (
         <Typography
-          className={classes.title}
+          className={classes.title2}
           color="inherit"
           variant="subtitle1"
         >
@@ -202,11 +191,6 @@ const EnhancedTableToolbar = props => {
           Objects
         </Typography>
       )}
-      <Tooltip title="Download">
-        <IconButton onClick={props.downloadSelected} aria-label="download">
-          <GetAppSharpIcon />
-        </IconButton>
-      </Tooltip>
     </Toolbar>
   );
 };
@@ -257,12 +241,14 @@ export default function EnhancedTable(props) {
 
   const handleSelectAllClick = event => {
     if (event.target.checked) {
-      const newSelecteds = rows.map(n => n);
-      setSelected(newSelecteds);
+      const newSelected = rows.map(n => n);
+      setSelected(newSelected);
+      props.getObjects(newSelected);
 
       return;
     }
     setSelected([]);
+    props.getObjects([]);
   };
 
   const handleClick = (event, name) => {
@@ -282,7 +268,7 @@ export default function EnhancedTable(props) {
     }
 
     setSelected(newSelected);
-    downloadButton();
+    props.getObjects(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -294,9 +280,6 @@ export default function EnhancedTable(props) {
     setPage(0);
   };
 
-  const downloadButton = () => {
-    props.getObjects(selected);
-  };
   const isSelected = name => selected.indexOf(name) !== -1;
 
   const emptyRows =
@@ -305,14 +288,10 @@ export default function EnhancedTable(props) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar
-          numSelected={selected.length}
-          downloadSelected={downloadButton}
-        />
+        <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             className={classes.table}
-            // handleChange={this.handleChange}
             aria-labelledby="tableTitle"
             size={"medium"}
             aria-label="enhanced table"
@@ -340,12 +319,18 @@ export default function EnhancedTable(props) {
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={index}
+                      style={
+                        isItemSelected
+                          ? { backgroundColor: lighten("#B86BCA", 0.85) }
+                          : null
+                      }
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
+                          style={{ color: "#864E93" }}
                         />
                       </TableCell>
                       <TableCell

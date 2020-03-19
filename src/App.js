@@ -7,7 +7,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 function App() {
   return (
     <Router>
@@ -50,8 +50,7 @@ function App() {
     </Router>
   );
 }
-{
-}
+
 const styles = {
   backgroundImage: {
     backgroundImage: "url(" + require("./media/bg.jpg") + ")",

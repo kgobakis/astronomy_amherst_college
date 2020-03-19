@@ -7,9 +7,9 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
+
 import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
+
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
@@ -29,18 +29,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const {
-    classes,
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort
-  } = props;
-  const createSortHandler = property => event => {
-    onRequestSort(event, property);
-  };
+  const { onSelectAllClick, order, orderBy, numSelected, rowCount } = props;
 
   return (
     <TableHead>
@@ -118,9 +107,12 @@ const EnhancedTableToolbar = props => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h6" id="tableTitle">
-          Types to Download
+          Image
         </Typography>
       )}
+      <Typography variant="h8" id="tableTitle">
+        Download
+      </Typography>
       <Tooltip title="Download">
         <IconButton onClick={props.downloadSelected} aria-label="download">
           <GetAppSharpIcon />
@@ -163,8 +155,6 @@ export default function EnhancedTable(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("Dates");
   const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const rows = props.data;
 
@@ -176,12 +166,14 @@ export default function EnhancedTable(props) {
 
   const handleSelectAllClick = event => {
     if (event.target.checked) {
-      const newSelecteds = rows.map(n => n);
-      setSelected(newSelecteds);
+      const newSelected = rows.map(n => n);
+      setSelected(newSelected);
+      props.getTypes(newSelected);
 
       return;
     }
     setSelected([]);
+    props.getTypes([]);
   };
 
   const handleClick = (event, name) => {
@@ -202,25 +194,18 @@ export default function EnhancedTable(props) {
     }
 
     setSelected(newSelected);
-    downloadButton();
+    props.getTypes(newSelected);
   };
 
-  const downloadButton = () => {
-    props.getTypes(selected);
-  };
   const isSelected = name => selected.indexOf(name) !== -1;
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar
-          numSelected={selected.length}
-          downloadSelected={downloadButton}
-        />
+        <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             className={classes.table}
-            // handleChange={this.handleChange}
             aria-labelledby="tableTitle"
             size={"medium"}
             aria-label="enhanced table"
@@ -230,7 +215,7 @@ export default function EnhancedTable(props) {
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
+              onSelectAllClick={event => handleSelectAllClick(event)}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
@@ -248,11 +233,17 @@ export default function EnhancedTable(props) {
                     tabIndex={-1}
                     key={index}
                     selected={isItemSelected}
+                    style={
+                      isItemSelected
+                        ? { backgroundColor: lighten("#B86BCA", 0.85) }
+                        : null
+                    }
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isItemSelected}
                         inputProps={{ "aria-labelledby": labelId }}
+                        style={{ color: "#864E93" }}
                       />
                     </TableCell>
                     <TableCell
