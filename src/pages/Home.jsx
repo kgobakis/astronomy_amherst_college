@@ -7,7 +7,6 @@ import { data as mockData, options } from "../mock/data";
 import { names } from "../mock/names";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import LinearBuffer from "../components/LinearBuffer";
-import { withStyles } from "@material-ui/core/styles";
 
 import { Button } from "@material-ui/core";
 // var axios = require("axios");
@@ -21,7 +20,8 @@ export default class Home extends Component {
       itemsToSearch: [],
       data: [],
       toDownload: [],
-      selectedImages: []
+      selectedImages: [],
+      timer: 0
     };
   }
   componentDidMount() {
@@ -32,7 +32,9 @@ export default class Home extends Component {
     //   });
     // });
   }
-
+  componentWillMount() {
+    clearInterval(this.myInterval);
+  }
   // componentDidMount() {
   //   fetch("https://10")
   //     .then(res => res.json())
@@ -77,20 +79,36 @@ export default class Home extends Component {
       selectedImages: types
     });
   };
-
+  startTimer = () => {
+    this.myInterval = setInterval(() => {
+      this.setState({
+        timer: this.state.timer - 1
+      });
+    }, 1000);
+  };
   postRequest = () => {
     if (
       this.state.toDownload.length > 0 &&
       this.state.selectedImages.length > 0
     ) {
+      this.setState({ timer: 60 });
+      this.startTimer();
     }
   };
   render() {
-    const { error, isLoaded } = this.state;
+    const { error, isLoaded, timer } = this.state;
     if (error) {
       return <div>Error: {error.message}</div>;
-    } else if (!isLoaded) {
+    } else if (isLoaded) {
       return <LinearBuffer />;
+    } else if (this.state.timer > 0) {
+      return (
+        <Alert severity="success">
+          <AlertTitle>
+            Success You Can Download Again in {timer} Seconds.
+          </AlertTitle>
+        </Alert>
+      );
     } else {
       return (
         <div style={styles.container}>
@@ -134,14 +152,8 @@ export default class Home extends Component {
               />
             }
           </div>
-          {this.state.toDownload.length > 0 &&
-          this.state.selectedImages.length > 0 ? (
-            <Alert severity="success">
-              <AlertTitle>Success</AlertTitle>
-              This is a success alert — check it out!
-            </Alert>
           ) : null}
-          <Button onClick={this.postRequest}>Submit</Button>
+          {/* <Button onClick={this.postRequest}>Submit</Button> */}
         </div>
       );
     }

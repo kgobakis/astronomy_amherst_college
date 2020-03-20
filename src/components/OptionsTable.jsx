@@ -202,7 +202,10 @@ export default function EnhancedTable(props) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          downloadSelected={props.download}
+        />
         <TableContainer>
           <Table
             className={classes.table}
