@@ -152,7 +152,6 @@ export default class Home extends Component {
               />
             }
           </div>
-          ) : null}
           {/* <Button onClick={this.postRequest}>Submit</Button> */}
         </div>
       );
