@@ -8,58 +8,65 @@ import { names } from "../mock/names";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import LinearBuffer from "../components/LinearBuffer";
 
-import { Button } from "@material-ui/core";
 // var axios = require("axios");
 
 export default class Home extends Component {
+  /*
+  error: Holds possible errors from api calls.
+  isLoaded: Boolean that turns true when we have hit database and received all Objects.
+  itemsToSearch: Holds what the users has selected, works in conjuctions with <SelectMultiple/>.
+  data: All Object objects that the api call returns from backend.
+  toDownload: Holds a list of the Objects the user has selected and wants to download.
+  selectedImages: Holds the types of images the user has selected and wants to download.
+  timer: Holds seconds the user has to wait before they can submit another download.
+  */
   constructor(props) {
     super(props);
     this.state = {
       error: null,
-      isLoaded: false,
+      isLoaded: true,
       itemsToSearch: [],
+      apiCall: [],
       data: [],
       toDownload: [],
       selectedImages: [],
       timer: 0
     };
   }
-  componentDidMount() {
-    // var th = this;
-    // this.serverRequest = axios.get(this.props.source).then(function(result) {
-    //   th.setState({
-    //     concerts: result.data.concerts
-    //   });
-    // });
-  }
+
   componentWillMount() {
     clearInterval(this.myInterval);
   }
-  // componentDidMount() {
-  //   fetch("https://10")
-  //     .then(res => res.json())
-  //     .then(
-  //       result => {
-  //         this.setState({
-  //           isLoaded: true,
-  //           items: result.items
-  //         });
-  //       },
-  //       // Note: it's important to handle errors here
-  //       // instead of a catch() block so that we don't swallow
-  //       // exceptions from actual bugs in components.s
-  //       error => {
-  //         this.setState({
-  //           isLoaded: true,
-  //           error
-  //         });
-  //       }
-  //     );
-  // }
+  componentDidMount() {
+    fetch("http://localhost:5000/")
+      .then(res => res.json())
+      .then(
+        result => {
+          this.setState({
+            isLoaded: false,
+            apiCall: result.objects
+          });
+          console.log(result.objects);
+        },
+        error => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      );
+  }
   getData = itemsToSearch => {
-    let adata = mockData.filter(row => itemsToSearch.includes(row.Object_Name));
+    // console.log(this.state.apiCall);
+    let searchedData = [];
+    for (let el in this.state.apiCall) {
+      if (itemsToSearch.includes(el)) {
+        searchedData.push(el);
+      }
+    }
+
     this.setState({
-      data: adata
+      data: searchedData
     });
   };
   onSubmitSearch = itemsToSearch => {
@@ -133,26 +140,25 @@ export default class Home extends Component {
           >
             <SelectMultiple
               onSubmitSearch={this.onSubmitSearch}
-              names={names}
+              names={Object.keys(this.state.apiCall)}
             />
           </div>
           <div style={{ ...styles.tableContainer }}>
-            {this.state.data.length >= 0 ? (
+            {Object.keys(this.state.data).length > 0 ? (
               <ObjectsTable
                 data={this.state.data}
                 names={this.state.itemsToSearch}
                 getObjects={this.getObjects}
               />
             ) : null}
-            {
+            {Object.keys(this.state.data).length > 0 ? (
               <OptionsTable
                 data={options}
                 getTypes={this.getTypes}
                 download={this.postRequest}
               />
-            }
+            ) : null}
           </div>
-          {/* <Button onClick={this.postRequest}>Submit</Button> */}
         </div>
       );
     }

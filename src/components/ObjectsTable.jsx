@@ -231,8 +231,15 @@ export default function EnhancedTable(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const rows = props.data;
+  const rows = flatten(props.data);
 
+  function flatten(arr) {
+    return arr.reduce(function(flat, toFlatten) {
+      return flat.concat(
+        Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten
+      );
+    }, []);
+  }
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -282,8 +289,8 @@ export default function EnhancedTable(props) {
 
   const isSelected = name => selected.indexOf(name) !== -1;
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  // const emptyRows =
+  //   rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -356,11 +363,11 @@ export default function EnhancedTable(props) {
                   );
                 }
               )}
-              {emptyRows > 0 && (
+              {/* {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell colSpan={6} />
                 </TableRow>
-              )}
+              )} */}
             </TableBody>
           </Table>
         </TableContainer>

@@ -54,11 +54,12 @@ function App() {
 const styles = {
   backgroundImage: {
     backgroundImage: "url(" + require("./media/bg.jpg") + ")",
+    backgroundColor: "#000000",
     backgroundPosition: "center",
     backgroundSize: "cover",
     backgroundRepeat: "repeat",
-    width: "100vw",
-    height: "120vh",
+    width: "100%",
+    height: "150vh",
     position: "absolute"
   },
   Toolbar: {

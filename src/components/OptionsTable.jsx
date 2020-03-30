@@ -110,7 +110,7 @@ const EnhancedTableToolbar = props => {
           Image
         </Typography>
       )}
-      <Typography variant="h8" id="tableTitle">
+      <Typography variant="h6" id="tableTitle">
         Download
       </Typography>
       <Tooltip title="Download">
