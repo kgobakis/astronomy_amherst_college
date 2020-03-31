@@ -46,6 +46,7 @@ export default class Home extends Component {
             isLoaded: false,
             apiCall: result.objects
           });
+          console.log(result);
         },
         error => {
           this.setState({
@@ -76,8 +77,9 @@ export default class Home extends Component {
     this.getData(itemsToSearch);
   };
   getObjects = objects => {
+    let obj = objects.map(el => el.Object_Name + "-" + el.Observation_Name);
     this.setState({
-      toDownload: objects
+      toDownload: obj
     });
   };
 
@@ -98,6 +100,8 @@ export default class Home extends Component {
       this.state.toDownload.length > 0 &&
       this.state.selectedImages.length > 0
     ) {
+      console.log(this.state.selectedImages);
+      console.log(this.state.toDownload);
       this.setState({ timer: 60 });
       this.startTimer();
     }

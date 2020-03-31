@@ -59,7 +59,7 @@ const styles = {
     backgroundSize: "cover",
     backgroundRepeat: "repeat",
     width: "100%",
-    height: "150vh",
+    height: "200vh",
     position: "absolute"
   },
   Toolbar: {

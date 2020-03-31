@@ -84,6 +84,18 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: "Avg. Seeing"
+  },
+  {
+    id: "Number_Images",
+    numeric: true,
+    disablePadding: false,
+    label: "# of Images"
+  },
+  {
+    id: "Scale_Factor",
+    numeric: false,
+    disablePadding: false,
+    label: "Scale Factor"
   }
 ];
 
@@ -311,10 +323,12 @@ export default function EnhancedTable(props) {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
+              TablePagination
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy)).map(
-                (row, index) => {
+              {stableSort(rows, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
                   const isItemSelected = isSelected(row);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -354,6 +368,8 @@ export default function EnhancedTable(props) {
                       <TableCell align="right">{row.Exposure_Time}</TableCell>
                       <TableCell align="right">{row.Total_Open}</TableCell>
                       <TableCell align="right">{row.Total_Rotation}</TableCell>
+                      <TableCell align="right">{row.Number_Images}</TableCell>
+                      <TableCell align="right">{row.Scale_Factor}</TableCell>
 
                       <TableCell align="right">
                         {row.Saturation_Radius}
@@ -361,8 +377,7 @@ export default function EnhancedTable(props) {
                       <TableCell align="right">{row.Avg_Seeing}</TableCell>
                     </TableRow>
                   );
-                }
-              )}
+                })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell colSpan={6} />
@@ -372,7 +387,7 @@ export default function EnhancedTable(props) {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
