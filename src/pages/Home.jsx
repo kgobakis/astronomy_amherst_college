@@ -46,7 +46,6 @@ export default class Home extends Component {
             isLoaded: false,
             apiCall: result.objects
           });
-          console.log(result.objects);
         },
         error => {
           this.setState({
@@ -57,11 +56,12 @@ export default class Home extends Component {
       );
   }
   getData = itemsToSearch => {
-    // console.log(this.state.apiCall);
     let searchedData = [];
     for (let el in this.state.apiCall) {
       if (itemsToSearch.includes(el)) {
-        searchedData.push(el);
+        for (let obs in this.state.apiCall[el]) {
+          searchedData.push(this.state.apiCall[el][obs]);
+        }
       }
     }
 
