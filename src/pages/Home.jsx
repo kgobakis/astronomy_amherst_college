@@ -3,12 +3,11 @@ import SelectMultiple from "../components/SelectMultiple";
 import ObjectsTable from "../components/ObjectsTable";
 import OptionsTable from "../components/OptionsTable";
 import Text from "@material-ui/core/Typography";
-import { data as mockData, options } from "../mock/data";
-import { names } from "../mock/names";
+import { options } from "../mock/data";
+import Iframe from "react-iframe";
+
 import { Alert, AlertTitle } from "@material-ui/lab";
 import LinearBuffer from "../components/LinearBuffer";
-
-// var axios = require("axios");
 
 export default class Home extends Component {
   /*
@@ -30,13 +29,14 @@ export default class Home extends Component {
       data: [],
       toDownload: [],
       selectedImages: [],
-      timer: 0
+      secondScreen: false,
+      dropboxUrl: ""
     };
   }
 
-  componentWillMount() {
-    clearInterval(this.myInterval);
-  }
+  // componentWillMount() {
+  //   clearInterval(this.myInterval);
+  // }
   componentDidMount() {
     fetch("http://localhost:5000/")
       .then(res => res.json())
@@ -46,7 +46,6 @@ export default class Home extends Component {
             isLoaded: false,
             apiCall: result.objects
           });
-          console.log(result);
         },
         error => {
           this.setState({
@@ -88,37 +87,59 @@ export default class Home extends Component {
       selectedImages: types
     });
   };
-  startTimer = () => {
-    this.myInterval = setInterval(() => {
-      this.setState({
-        timer: this.state.timer - 1
-      });
-    }, 1000);
-  };
+  // startTimer = () => {
+  //   this.myInterval = setInterval(() => {
+  //     this.setState({
+  //       timer: this.state.timer - 1
+  //     });
+  //   }, 1000);
+  // };
   postRequest = () => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        observations: this.state.toDownload,
+        image_types: this.state.selectedImages
+      })
+    };
+
     if (
       this.state.toDownload.length > 0 &&
       this.state.selectedImages.length > 0
     ) {
-      console.log(this.state.selectedImages);
-      console.log(this.state.toDownload);
-      this.setState({ timer: 60 });
-      this.startTimer();
+      fetch("http://localhost:5000/submit", requestOptions)
+        .then(response => response.json())
+        .then(jsonData => {
+          // jsonData is parsed json object received from url
+          console.log(jsonData);
+          this.setState({ dropboxUrl: jsonData, secondScreen: true });
+        })
+        .catch(error => {
+          // handle your errors here
+          console.error(error);
+        });
     }
   };
   render() {
-    const { error, isLoaded, timer } = this.state;
+    const { error, isLoaded, dropboxUrl } = this.state;
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (isLoaded) {
       return <LinearBuffer />;
-    } else if (this.state.timer > 0) {
+    } else if (this.state.secondScreen) {
       return (
-        <Alert severity="success">
-          <AlertTitle>
-            Success You Can Download Again in {timer} Seconds.
-          </AlertTitle>
-        </Alert>
+        <div style={styles.container}>
+          <Iframe
+            url={dropboxUrl}
+            width="800px"
+            height="800px"
+            id="myId"
+            className="myClassname"
+            display="initial"
+            position="relative"
+          />
+        </div>
       );
     } else {
       return (
@@ -128,7 +149,7 @@ export default class Home extends Component {
           </h1>
           <div style={{ color: "#FFFFFF" }}>
             <Text variant="caption">
-              ** You can scroll up/down the list! **
+              ** You can scroll up/down the list and select multiple stars! **
             </Text>
           </div>
           <div

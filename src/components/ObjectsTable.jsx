@@ -200,7 +200,7 @@ const EnhancedTableToolbar = props => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h6" id="tableTitle">
-          Objects
+          Available Observations for Selected Stars
         </Typography>
       )}
     </Toolbar>
@@ -245,13 +245,6 @@ export default function EnhancedTable(props) {
 
   const rows = props.data;
 
-  function flatten(arr) {
-    return arr.reduce(function(flat, toFlatten) {
-      return flat.concat(
-        Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten
-      );
-    }, []);
-  }
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");

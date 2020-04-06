@@ -24,7 +24,7 @@ const headCells = [
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "Type"
+    label: "Format"
   }
 ];
 
@@ -107,7 +107,7 @@ const EnhancedTableToolbar = props => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h6" id="tableTitle">
-          Image
+          Image Formats to Download
         </Typography>
       )}
       <Typography variant="h6" id="tableTitle">
