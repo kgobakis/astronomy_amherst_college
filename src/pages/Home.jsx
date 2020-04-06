@@ -4,10 +4,10 @@ import ObjectsTable from "../components/ObjectsTable";
 import OptionsTable from "../components/OptionsTable";
 import Text from "@material-ui/core/Typography";
 import { options } from "../mock/data";
-import Iframe from "react-iframe";
-
-import { Alert, AlertTitle } from "@material-ui/lab";
+import NewWindow from "react-new-window";
 import LinearBuffer from "../components/LinearBuffer";
+
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 export default class Home extends Component {
   /*
@@ -24,6 +24,7 @@ export default class Home extends Component {
     this.state = {
       error: null,
       isLoaded: true,
+      isLoaded2: false,
       itemsToSearch: [],
       apiCall: [],
       data: [],
@@ -34,9 +35,6 @@ export default class Home extends Component {
     };
   }
 
-  // componentWillMount() {
-  //   clearInterval(this.myInterval);
-  // }
   componentDidMount() {
     fetch("http://localhost:5000/")
       .then(res => res.json())
@@ -87,14 +85,9 @@ export default class Home extends Component {
       selectedImages: types
     });
   };
-  // startTimer = () => {
-  //   this.myInterval = setInterval(() => {
-  //     this.setState({
-  //       timer: this.state.timer - 1
-  //     });
-  //   }, 1000);
-  // };
+
   postRequest = () => {
+    this.setState({ isLoaded2: true });
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -111,9 +104,11 @@ export default class Home extends Component {
       fetch("http://localhost:5000/submit", requestOptions)
         .then(response => response.json())
         .then(jsonData => {
-          // jsonData is parsed json object received from url
-          console.log(jsonData);
-          this.setState({ dropboxUrl: jsonData, secondScreen: true });
+          this.setState({
+            dropboxUrl: jsonData.url,
+            secondScreen: true,
+            isLoaded2: false
+          });
         })
         .catch(error => {
           // handle your errors here
@@ -122,25 +117,28 @@ export default class Home extends Component {
     }
   };
   render() {
-    const { error, isLoaded, dropboxUrl } = this.state;
+    const { error, isLoaded, isLoaded2, secondScreen, dropboxUrl } = this.state;
     if (error) {
-      return <div>Error: {error.message}</div>;
-    } else if (isLoaded) {
-      return <LinearBuffer />;
-    } else if (this.state.secondScreen) {
       return (
         <div style={styles.container}>
-          <Iframe
-            url={dropboxUrl}
-            width="800px"
-            height="800px"
-            id="myId"
-            className="myClassname"
-            display="initial"
-            position="relative"
-          />
+          <h2 style={{ color: "#FFFFFF", textShadow: "2px 2px #000000" }}>
+            We Unable to Connect to the Database. Please, Try Again Later.
+          </h2>
         </div>
       );
+    } else if (isLoaded) {
+      return <LinearBuffer />;
+    } else if (isLoaded2) {
+      return (
+        <div style={styles.container}>
+          <h2 style={{ color: "#FFFFFF", textShadow: "2px 2px #000000" }}>
+            The Page is Being Loaded!
+          </h2>
+          <CircularProgress />
+        </div>
+      );
+    } else if (this.state.secondScreen) {
+      return <NewWindow title="Dropbox Page" url={dropboxUrl}></NewWindow>;
     } else {
       return (
         <div style={styles.container}>
