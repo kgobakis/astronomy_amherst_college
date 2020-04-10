@@ -31,29 +31,29 @@ export default class Home extends Component {
       toDownload: [],
       selectedImages: [],
       secondScreen: false,
-      dropboxUrl: ""
+      dropboxUrl: "",
     };
   }
 
   componentDidMount() {
     fetch("http://localhost:5000/")
-      .then(res => res.json())
+      .then((res) => res.json())
       .then(
-        result => {
+        (result) => {
           this.setState({
             isLoaded: false,
-            apiCall: result.objects
+            apiCall: result.objects,
           });
         },
-        error => {
+        (error) => {
           this.setState({
             isLoaded: true,
-            error
+            error,
           });
         }
       );
   }
-  getData = itemsToSearch => {
+  getData = (itemsToSearch) => {
     let searchedData = [];
     for (let el in this.state.apiCall) {
       if (itemsToSearch.includes(el)) {
@@ -64,25 +64,25 @@ export default class Home extends Component {
     }
 
     this.setState({
-      data: searchedData
+      data: searchedData,
     });
   };
-  onSubmitSearch = itemsToSearch => {
+  onSubmitSearch = (itemsToSearch) => {
     this.setState({
-      itemsToSearch: itemsToSearch
+      itemsToSearch: itemsToSearch,
     });
     this.getData(itemsToSearch);
   };
-  getObjects = objects => {
-    let obj = objects.map(el => el.Object_Name + "-" + el.Observation_Name);
+  getObjects = (objects) => {
+    let obj = objects.map((el) => el.Object_Name + "-" + el.Observation_Name);
     this.setState({
-      toDownload: obj
+      toDownload: obj,
     });
   };
 
-  getTypes = types => {
+  getTypes = (types) => {
     this.setState({
-      selectedImages: types
+      selectedImages: types,
     });
   };
 
@@ -93,8 +93,8 @@ export default class Home extends Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         observations: this.state.toDownload,
-        image_types: this.state.selectedImages
-      })
+        image_types: this.state.selectedImages,
+      }),
     };
 
     if (
@@ -102,15 +102,15 @@ export default class Home extends Component {
       this.state.selectedImages.length > 0
     ) {
       fetch("http://localhost:5000/submit", requestOptions)
-        .then(response => response.json())
-        .then(jsonData => {
+        .then((response) => response.json())
+        .then((jsonData) => {
           this.setState({
             dropboxUrl: jsonData.url,
             secondScreen: true,
-            isLoaded2: false
+            isLoaded2: false,
           });
         })
-        .catch(error => {
+        .catch((error) => {
           // handle your errors here
           console.error(error);
         });
@@ -132,13 +132,18 @@ export default class Home extends Component {
       return (
         <div style={styles.container}>
           <h2 style={{ color: "#FFFFFF", textShadow: "2px 2px #000000" }}>
-            The Page is Being Loaded!
+            The Page is Being Loaded! A New Window Will Be Opened With Your
+            Requested Observations in Dropbox!
           </h2>
           <CircularProgress />
         </div>
       );
     } else if (this.state.secondScreen) {
-      return <NewWindow title="Dropbox Page" url={dropboxUrl}></NewWindow>;
+      return (
+        <NewWindow title="Dropbox Page" url={dropboxUrl}></NewWindow> && (
+          <a href={dropboxUrl}>Click Here If Window Did Not Show Up!</a>
+        )
+      );
     } else {
       return (
         <div style={styles.container}>
@@ -158,7 +163,7 @@ export default class Home extends Component {
               justifyContent: "center",
               alignItems: "center",
               flexDirection: "row",
-              borderRadius: "15px"
+              borderRadius: "15px",
             }}
           >
             <SelectMultiple
@@ -193,7 +198,7 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   tableContainer: {
     marginTop: 10,
@@ -201,12 +206,12 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
   },
   table: {
-    marginRight: 2
+    marginRight: 2,
   },
   root: {
-    position: "relative"
-  }
+    position: "relative",
+  },
 };
