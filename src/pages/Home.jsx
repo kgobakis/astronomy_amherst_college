@@ -6,7 +6,8 @@ import Text from "@material-ui/core/Typography";
 import { options } from "../mock/data";
 import NewWindow from "react-new-window";
 import LinearBuffer from "../components/LinearBuffer";
-
+import Button from "@material-ui/core/Button";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 export default class Home extends Component {
@@ -87,7 +88,6 @@ export default class Home extends Component {
   };
 
   postRequest = () => {
-    this.setState({ isLoaded2: true });
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -101,6 +101,8 @@ export default class Home extends Component {
       this.state.toDownload.length > 0 &&
       this.state.selectedImages.length > 0
     ) {
+      this.setState({ isLoaded2: true });
+
       fetch("http://localhost:5000/submit", requestOptions)
         .then((response) => response.json())
         .then((jsonData) => {
@@ -118,6 +120,8 @@ export default class Home extends Component {
   };
   render() {
     const { error, isLoaded, isLoaded2, secondScreen, dropboxUrl } = this.state;
+    var moment = require("moment");
+
     if (error) {
       return (
         <div style={styles.container}>
@@ -140,9 +144,28 @@ export default class Home extends Component {
       );
     } else if (this.state.secondScreen) {
       return (
-        <NewWindow title="Dropbox Page" url={dropboxUrl}></NewWindow> && (
-          <a href={dropboxUrl}>Click Here If Window Did Not Show Up!</a>
-        )
+        <React.Fragment>
+          <NewWindow title="Dropbox Page" url={dropboxUrl} />
+          <div style={styles.containerSecondPage}>
+            <Button
+              startIcon={<OpenInNewIcon />}
+              color="secondary"
+              variant="outlined"
+              onClick={() => {
+                window.open(dropboxUrl);
+              }}
+              style={{ marginRight: 10 }}
+            >
+              Open in Dropbox
+            </Button>
+
+            <h3 style={{ color: "#FFFFFF", textDecoration: "underline" }}>
+              {" "}
+              Link will expire at :{" "}
+              {moment().add(55, "minutes").format("hh:mm A")}
+            </h3>
+          </div>
+        </React.Fragment>
       );
     } else {
       return (
@@ -213,5 +236,12 @@ const styles = {
   },
   root: {
     position: "relative",
+  },
+  containerSecondPage: {
+    marginTop: 20,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
   },
 };

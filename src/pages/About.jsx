@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Img from "react-image";
+
 import Follette from "../media/kate-follette.jpeg";
 const toPrint = (
   <h3 style={{ color: "#FFFFFF" }}>
@@ -32,6 +33,6 @@ const styles = {
     display: "flex",
     justifyContent: "flex-start",
 
-    flexDirection: "row"
-  }
+    flexDirection: "row",
+  },
 };
