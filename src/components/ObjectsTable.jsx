@@ -38,7 +38,7 @@ function stableSort(array, comparator) {
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-  return stabilizedThis.map(el => el[0]);
+  return stabilizedThis.map((el) => el[0]);
 }
 
 const headCells = [
@@ -46,57 +46,57 @@ const headCells = [
     id: "Object_Name",
     numeric: false,
     disablePadding: true,
-    label: "Name"
+    label: "Name",
   },
   { id: "Date", numeric: true, disablePadding: false, label: "Date" },
   {
     id: "Avg_Width",
     numeric: true,
     disablePadding: false,
-    label: "Avg. Width"
+    label: "Avg. Width",
   },
   {
     id: "Exposure_Time",
     numeric: true,
     disablePadding: false,
-    label: "Exposure Time"
+    label: "Exposure Time",
   },
   {
     id: "Total_Open",
     numeric: true,
     disablePadding: false,
-    label: "Total Open Shutter Time"
+    label: "Total Open Shutter Time",
   },
   {
     id: "Total_Sky",
     numeric: true,
     disablePadding: false,
-    label: "Total On Sky Rotation"
+    label: "Total On Sky Rotation",
   },
   {
     id: "Saturation_Radius",
     numeric: true,
     disablePadding: false,
-    label: "Saturation Radius"
+    label: "Saturation Radius",
   },
   {
     id: "Avg_Seeing",
     numeric: true,
     disablePadding: false,
-    label: "Avg. Seeing"
+    label: "Avg. Seeing",
   },
   {
     id: "Number_Images",
     numeric: true,
     disablePadding: false,
-    label: "# of Images"
+    label: "# of Images",
   },
   {
     id: "Scale_Factor",
     numeric: false,
     disablePadding: false,
-    label: "Scale Factor"
-  }
+    label: "Scale Factor",
+  },
 ];
 
 function EnhancedTableHead(props) {
@@ -107,9 +107,9 @@ function EnhancedTableHead(props) {
     orderBy,
     numSelected,
     rowCount,
-    onRequestSort
+    onRequestSort,
   } = props;
-  const createSortHandler = property => event => {
+  const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
@@ -124,7 +124,7 @@ function EnhancedTableHead(props) {
             inputProps={{ "aria-label": "select all objects" }}
           />
         </TableCell>
-        {headCells.map(headCell => (
+        {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
@@ -157,37 +157,37 @@ EnhancedTableHead.propTypes = {
   onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired
+  rowCount: PropTypes.number.isRequired,
 };
 
-const useToolbarStyles = makeStyles(theme => ({
+const useToolbarStyles = makeStyles((theme) => ({
   root: {
     paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1)
+    paddingRight: theme.spacing(1),
   },
   highlight:
     theme.palette.type === "light"
       ? {
           color: "#864E93",
-          backgroundColor: lighten("#B86BCA", 0.85)
+          backgroundColor: lighten("#B86BCA", 0.85),
         }
       : {
           color: "#864E93",
-          backgroundColor: lighten("#B86BCA", 0.85)
+          backgroundColor: lighten("#B86BCA", 0.85),
         },
   title: {
-    flex: "1 1 100%"
-  }
+    flex: "1 1 100%",
+  },
 }));
 
-const EnhancedTableToolbar = props => {
+const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
 
   return (
     <Toolbar
       className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0
+        [classes.highlight]: numSelected > 0,
       })}
     >
       {numSelected > 0 ? (
@@ -208,19 +208,19 @@ const EnhancedTableToolbar = props => {
 };
 
 EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired
+  numSelected: PropTypes.number.isRequired,
 };
 const yo = "100%";
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    width: yo
+    width: yo,
   },
   paper: {
     width: "100%",
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   table: {
-    minWidth: 400
+    minWidth: 400,
   },
   visuallyHidden: {
     border: 0,
@@ -231,8 +231,8 @@ const useStyles = makeStyles(theme => ({
     padding: 0,
     position: "absolute",
     top: 20,
-    width: 1
-  }
+    width: 1,
+  },
 }));
 
 export default function EnhancedTable(props) {
@@ -241,7 +241,7 @@ export default function EnhancedTable(props) {
   const [orderBy, setOrderBy] = React.useState("Dates");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  // const [rowsPerPage, setRowsPerPage] = React.useState(100);
 
   const rows = props.data;
 
@@ -251,9 +251,9 @@ export default function EnhancedTable(props) {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = event => {
+  const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map(n => n);
+      const newSelected = rows.map((n) => n);
       setSelected(newSelected);
       props.getObjects(newSelected);
 
@@ -287,15 +287,15 @@ export default function EnhancedTable(props) {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  // const handleChangeRowsPerPage = (event) => {
+  //   setRowsPerPage(parseInt(event.target.value, 10));
+  //   setPage(0);
+  // };
 
-  const isSelected = name => selected.indexOf(name) !== -1;
+  const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  // const emptyRows =
+  //   rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -316,11 +316,11 @@ export default function EnhancedTable(props) {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
-              TablePagination
+              // TablePagination
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row);
                   const labelId = `enhanced-table-checkbox-${index}`;
@@ -328,7 +328,7 @@ export default function EnhancedTable(props) {
                   return (
                     <TableRow
                       hover
-                      onClick={event => handleClick(event, row)}
+                      onClick={(event) => handleClick(event, row)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -371,15 +371,15 @@ export default function EnhancedTable(props) {
                     </TableRow>
                   );
                 })}
-              {emptyRows > 0 && (
+              {/* {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell colSpan={6} />
                 </TableRow>
-              )}
+              )} */}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
+        {/* <TablePagination
           rowsPerPageOptions={[5, 10]}
           component="div"
           count={rows.length}
@@ -387,7 +387,7 @@ export default function EnhancedTable(props) {
           page={page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
+        /> */}
       </Paper>
     </div>
   );

@@ -14,7 +14,15 @@ const toPrint = (
     <a href="http://www.katefollette.com/"> personal website</a>.
   </h3>
 );
-
+const credit = (
+  <h5 style={{ color: "#FFFFFF" }}>
+    * This website and the underlying technology was developed by{" "}
+    <a href="https://github.com/kgobakis">Kostas Gobakis '20</a> and{" "}
+    <a href="https://github.com/brandtdudziak">Brandt Dudziak '20</a> under the
+    supervision of Professor{" "}
+    <a href="https://github.com/rionda">Matteo Riondatto</a>.
+  </h5>
+);
 export default class About extends Component {
   render() {
     return (
@@ -22,7 +30,11 @@ export default class About extends Component {
         <div style={{ margin: 2 }}>
           <Img src={Follette} />
         </div>
-        <div style={{ marginLeft: 10, width: 450 }}>{toPrint}</div>
+
+        <div style={{ marginLeft: 10, width: 450 }}>
+          <div>{toPrint}</div>
+          <div style={{ marginTop: 145 }}>{credit}</div>
+        </div>
       </div>
     );
   }
